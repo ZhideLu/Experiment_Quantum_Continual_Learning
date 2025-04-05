@@ -1,10 +1,11 @@
+# python 3.9
 import copy
 import pickle
 import time
 import matplotlib.pyplot as plt
 import numpy as np
 import pennylane as qml
-from pickle_depository import *
+from Adam import *
 import jax
 import copy
 import scipy
@@ -49,19 +50,13 @@ class circuit:
                     qml.CNOT(wires=[qidx * 2, qidx * 2+1])
                 for qidx in range(int((self.qnum - 1) / 2)):
                     qml.CNOT(wires=[qidx * 2 + 1, qidx * 2 + 2])
-                # else:
-                #     for qidx in range(int(self.qnum / 2)):
-                #         qml.CNOT(wires=[qidx * 2+1, qidx * 2])
-                #     for qidx in range(int((self.qnum - 1) / 2)):
-                #         qml.CNOT(wires=[qidx * 2 + 2, qidx * 2 + 1])
+
                 counter = counter + 3
                 qml.Barrier()
             return qml.expval(op=qml.Hermitian(np.array([[1, 0], [0, 0]]),
                                                wires=self.measure_qnum))
 
         return _circuit
-
-
 
     def circuit_phase(self):
         @qml.qnode(self.dev)
@@ -159,7 +154,7 @@ class cml(pickle_depository):
             qnum=qnum, block_num=block_num,
             measure_qnum=measure_qnum,sq_num_per_block=sq_num_per_block,state_block_num=state_block_num).circuit_phase())
         
-        self.load_train_datasets()
+        
         param_num=self.qnum*self.sq_num_per_block*self.block_num if param_num is None else param_num
         self.param_num=param_num
         np.random.seed(1)
@@ -169,16 +164,14 @@ class cml(pickle_depository):
         print("use random params!!!")
         self.SAVE_PATH = save_paht 
         self.seed_num=seed_num
-
-    def save_params(self, task, train_num, measure_qnum):
-        save_path = "/training_params/train_" + task + '_' + "params_num=" + str(
-            train_num) + "_readq" + str(measure_qnum)
+        self.load_train_datasets()
+    def save_params(self):
+        save_path = "/files/Params.pkl"
         with open(self.SAVE_PATH + save_path, "wb") as f:
             pickle.dump(self.params, f)
 
-    def load_params(self, task, train_num, measure_qnum):
-        save_path = "/training_params/train_" + task + "_params_num=" + str(
-            train_num) + "_readq" + str(measure_qnum)
+    def load_params(self):
+        save_path = "/files/Params.pkl"
         with open(self.SAVE_PATH + save_path, "rb") as f:
             data = pickle.load(f)
         return data
@@ -191,7 +184,7 @@ class cml(pickle_depository):
         self.y_train = {}
         self.x_test = {}
         self.y_test = {}
-        with open('./dataset/Data.pkl', 'rb') as f:
+        with open(self.SAVE_PATH+'/files/Data.pkl', 'rb') as f:
             data=pickle.load(f)
         for task in tasks:
             self.x_train[task] = data[task]['x_train']
