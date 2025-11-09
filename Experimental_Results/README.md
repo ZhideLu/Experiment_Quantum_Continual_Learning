@@ -10,11 +10,11 @@ Required packages: numpy, matplotlib, pandas
 ## data
 We provide all the data collected during the experiments.
 
-## Figure_2_demo_quantum_continual_learning
-The code for plotting Fig.2 in the main text.
-
-## Figure_3_demo_for_quantum_advantages
+## Figure_3_demo_quantum_continual_learning
 The code for plotting Fig.3 in the main text.
 
+## Figure_4_demo_for_quantum_enhance
+The code for plotting Fig.4 in the main text.
+
 ## Supplementary
-The code for plotting Supplementary Fig.8.
+The code for plotting Supplementary Fig.S10.
